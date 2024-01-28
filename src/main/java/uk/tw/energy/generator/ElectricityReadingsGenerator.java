@@ -10,6 +10,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+// ADDED THIS CLASS AS A COMPONENT FOR AUTOWIRING
+// @COMPONENT
+
+@Component
 public class ElectricityReadingsGenerator {
 
     public List<ElectricityReading> generate(int number) {

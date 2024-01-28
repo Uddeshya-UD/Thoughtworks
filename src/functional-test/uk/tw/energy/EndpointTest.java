@@ -1,3 +1,7 @@
+// WRONG PACKAGE IS POINTED 
+// CORRECT - package java.uk.tw.energy;
+
+
 package uk.tw.energy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import uk.tw.energy.App;
 import uk.tw.energy.builders.MeterReadingsBuilder;
 import uk.tw.energy.domain.MeterReadings;
 
