@@ -1,5 +1,7 @@
 package uk.tw.energy.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/price-plans")
 public class PricePlanComparatorController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PricePlanComparatorController.class);
 
     public final static String PRICE_PLAN_ID_KEY = "pricePlanId";
     public final static String PRICE_PLAN_COMPARISONS_KEY = "pricePlanComparisons";

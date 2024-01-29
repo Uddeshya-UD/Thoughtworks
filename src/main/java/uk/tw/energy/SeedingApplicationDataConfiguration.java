@@ -8,8 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.stereotype.Service;
+
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
+import uk.tw.energy.domain.User;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
 import java.math.BigDecimal;
@@ -17,13 +20,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
 import static java.util.Collections.emptyList;
 /**
  * Configuration class for seeding application data.
  */
 
-@Configuration
+@Service
 public class SeedingApplicationDataConfiguration {
 
     private final ElectricityReadingsGenerator electricityReadingsGenerator;
@@ -113,6 +117,19 @@ public class SeedingApplicationDataConfiguration {
         return readings;
 }
 
+@Bean
+public Map<String, List<String>> getUserDetails() {
+    final Map<String, List<String>> userSmartMeterDetails = new HashMap<>();
+
+    SmartMeterToUserAccounts().forEach((user, meters) -> {
+        // Add the user to the map with the list of smart meters
+        userSmartMeterDetails.put(user, meters);
+    });
+
+    return userSmartMeterDetails;
+}
+
+
 
     // === 3 ===
 
@@ -147,6 +164,20 @@ public class SeedingApplicationDataConfiguration {
             "smart-meter-4", PricePlanId.RENEWABLES.getId()
         );
     }
+
+    
+    public Map<String, List<String>> SmartMeterToUserAccounts() {
+        return Map.of(
+                "Sarah", Arrays.asList("smart-meter-0","smart-meter-0.2"),
+                "Peter", Arrays.asList("smart-meter-1"),
+                "Charlie", Arrays.asList("smart-meter-2"),
+                "Andrea", Arrays.asList("smart-meter-3"),
+                "Alex", Arrays.asList("smart-meter-4")
+        );
+    }
+
+
+
 
     @Bean
     @Primary

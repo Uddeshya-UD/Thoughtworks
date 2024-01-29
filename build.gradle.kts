@@ -59,6 +59,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude (group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.4")
+
 }
 
 tasks.named<Test>("test") {
