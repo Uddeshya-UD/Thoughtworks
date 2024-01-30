@@ -33,7 +33,7 @@ public class MeterReadingController {
 
     
     @PostMapping("/store")
-    public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
+    public ResponseEntity<?> storeReadings(@RequestBody MeterReadings meterReadings) {
         log.info("Received request to store readings for smart meter ID: {}", meterReadings.smartMeterId());
 
         if (!isMeterReadingsValid(meterReadings)) {
@@ -75,7 +75,7 @@ public class MeterReadingController {
     }
 
     @GetMapping("/read/{smartMeterId}")
-    public ResponseEntity readReadings(@PathVariable String smartMeterId) {
+    public ResponseEntity<List<ElectricityReading>> readReadings(@PathVariable String smartMeterId) {
         log.info("Received request to read readings for smart meter ID: {}", smartMeterId);
 
         Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(smartMeterId);
