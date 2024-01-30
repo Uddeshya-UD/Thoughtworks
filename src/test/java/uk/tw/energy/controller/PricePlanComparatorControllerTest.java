@@ -1,5 +1,6 @@
 package uk.tw.energy.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+// Instead of using assertThat from AssertJ, you can use the built-in assertions provided by JUnit 5.
 
 public class PricePlanComparatorControllerTest {
 
@@ -112,6 +115,7 @@ public class PricePlanComparatorControllerTest {
 
     @Test
     public void givenNoMatchingMeterIdShouldReturnNotFound() {
-        assertThat(controller.calculatedCostForEachPricePlan("not-found").getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, controller.calculatedCostForEachPricePlan("not-found").getStatusCode());
+
     }
 }

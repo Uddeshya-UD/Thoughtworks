@@ -56,10 +56,15 @@ val functionalTest = task<Test>("functionalTest") {
 dependencies {
     /* Spring Boot */
     implementation ("org.springframework.boot:spring-boot-starter-web")
+    // implementation("io.springfox:springfox-swagger-ui:2.9.2")
+    // implementation("io.springfox:springfox-swagger2:2.9.2")
+    //implementation("io.springfox:springfox-swagger2:3.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude (group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.4")
+
+    
+
 
 }
 

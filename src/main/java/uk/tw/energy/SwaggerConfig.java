@@ -1,24 +1,29 @@
-package uk.tw.energy;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+// package uk.tw.energy;
 
-@Configuration
-public class SwaggerConfig implements WebMvcConfigurer {
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/swagger-ui/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/springdoc-openapi-ui/3.1.0/")
-                .resourceChain(false);
-    }
+// import springfox.documentation.builders.RequestHandlerSelectors;
+// import springfox.documentation.spi.DocumentationType;
+// import springfox.documentation.spring.web.plugins.Docket;
 
-    // @Bean
-    // public OpenAPI customOpenAPI() {
-    //     return new OpenAPI()
-    //             .info(new Info().title("Your API").version("1.0"))
-    //             // Additional customization if needed
-    //             ;
-    // }
-}
+
+// @Configuration
+// // @EnableSwagger2
+// public class SwaggerConfig {
+
+//     @Bean
+//     public Docket productApi() {
+//         return new Docket(DocumentationType.SWAGGER_2)
+//                 .select()
+//                 .apis(RequestHandlerSelectors.basePackage("uk.tw.energy"))
+//                 .build();
+//     }
+
+//     public void addResourceHandler(ResourceHandlerRegistry registry) {
+//         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+//         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+//     }
+// }

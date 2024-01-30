@@ -43,9 +43,14 @@ public class MeterReadingController {
     }
 
     */
+    
     @PostMapping("/store")
     public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
+        log.info("Received request to store readings for smart meter ID: {}", meterReadings.smartMeterId());
+
         if (!isMeterReadingsValid(meterReadings)) {
+            log.warn("Invalid readings received for smart meter ID: {}", meterReadings.smartMeterId());
+            // Return BAD_REQUEST when the readings are not valid
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
             /*  ISSUE - FIRST
@@ -61,12 +66,18 @@ public class MeterReadingController {
 
              */
         }
-        meterReadingService.storeReadings(meterReadings.smartMeterId(), meterReadings.electricityReadings());
-         // Return OK when readings are successfully stored
 
-        return ResponseEntity.ok().build();
+        try {
+            meterReadingService.storeReadings(meterReadings.smartMeterId(), meterReadings.electricityReadings());
+            log.info("Readings stored successfully for smart meter ID: {}", meterReadings.smartMeterId());
+            // Return OK when readings are successfully stored
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("Failed to store readings for smart meter ID: {}. Error: {}", meterReadings.smartMeterId(), e.getMessage());
+            // Return INTERNAL_SERVER_ERROR if an exception occurs during storage
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-
 
     private boolean isMeterReadingsValid(MeterReadings meterReadings) {
         String smartMeterId = meterReadings.smartMeterId();
@@ -77,6 +88,8 @@ public class MeterReadingController {
 
     @GetMapping("/read/{smartMeterId}")
     public ResponseEntity readReadings(@PathVariable String smartMeterId) {
+        log.info("Received request to read readings for smart meter ID: {}", smartMeterId);
+
         Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(smartMeterId);
         return readings.isPresent()
                 ? ResponseEntity.ok(readings.get())

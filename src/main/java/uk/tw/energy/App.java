@@ -2,6 +2,7 @@ package uk.tw.energy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,4 +16,5 @@ public class App {
         SpringApplication.run(App.class);
         log.info("Starting application");
     }
+
 }
