@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/price-plans")
+@RequestMapping("/v1/price-plans")
 public class PricePlanComparatorController {
 
     private static final Logger log = LoggerFactory.getLogger(PricePlanComparatorController.class);
@@ -37,47 +37,58 @@ public class PricePlanComparatorController {
 
     @GetMapping("/compare-all/{smartMeterId}")
     public ResponseEntity<Map<String, Object>> calculatedCostForEachPricePlan(@PathVariable String smartMeterId) {
-        log.info("Received request to compare all price plans for smart meter ID: {}", smartMeterId);
+        try {
+            log.info("Received request to compare all price plans for smart meter ID: {}", smartMeterId);
 
-        String pricePlanId = accountService.getPricePlanIdForSmartMeterId(smartMeterId);
-        Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
-                pricePlanService.getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
+            String pricePlanId = accountService.getPricePlanIdForSmartMeterId(smartMeterId);
+            Optional<Map<String, BigDecimal>> consumptionsForPricePlans = pricePlanService
+                    .getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
 
-        if (!consumptionsForPricePlans.isPresent()) {
-            log.warn("Consumptions not found for smart meter ID: {}", smartMeterId);
-            return ResponseEntity.notFound().build();
+            if (!consumptionsForPricePlans.isPresent()) {
+                log.warn("Consumptions not found for smart meter ID: {}", smartMeterId);
+                return ResponseEntity.notFound().build();
+            }
+
+            Map<String, Object> pricePlanComparisons = new HashMap<>();
+            pricePlanComparisons.put(PRICE_PLAN_ID_KEY, pricePlanId);
+            pricePlanComparisons.put(PRICE_PLAN_COMPARISONS_KEY, consumptionsForPricePlans.get());
+
+            log.info("Price plan comparisons retrieved successfully for smart meter ID: {}", smartMeterId);
+            return ResponseEntity.ok(pricePlanComparisons);
+        } catch (Exception e) {
+            log.error("An error occurred while processing the request", e);
+            return ResponseEntity.status(500).build(); // Internal Server Error
         }
-
-        Map<String, Object> pricePlanComparisons = new HashMap<>();
-        pricePlanComparisons.put(PRICE_PLAN_ID_KEY, pricePlanId);
-        pricePlanComparisons.put(PRICE_PLAN_COMPARISONS_KEY, consumptionsForPricePlans.get());
-
-        log.info("Price plan comparisons retrieved successfully for smart meter ID: {}", smartMeterId);
-        return ResponseEntity.ok(pricePlanComparisons);
     }
 
     @GetMapping("/recommend/{smartMeterId}")
     public ResponseEntity<List<Map.Entry<String, BigDecimal>>> recommendCheapestPricePlans(
             @PathVariable String smartMeterId,
             @RequestParam(value = "limit", required = false) Integer limit) {
-        log.info("Received request to recommend cheapest price plans for smart meter ID: {}", smartMeterId);
+        try {
+            log.info("Received request to recommend cheapest price plans for smart meter ID: {}", smartMeterId);
 
-        Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
-                pricePlanService.getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
+            Optional<Map<String, BigDecimal>> consumptionsForPricePlans = pricePlanService
+                    .getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
 
-        if (!consumptionsForPricePlans.isPresent()) {
-            log.warn("Consumptions not found for smart meter ID: {}", smartMeterId);
-            return ResponseEntity.notFound().build();
+            if (!consumptionsForPricePlans.isPresent()) {
+                log.warn("Consumptions not found for smart meter ID: {}", smartMeterId);
+                return ResponseEntity.notFound().build();
+            }
+
+            List<Map.Entry<String, BigDecimal>> recommendations = new ArrayList<>(
+                    consumptionsForPricePlans.get().entrySet());
+            recommendations.sort(Comparator.comparing(Map.Entry::getValue));
+
+            if (limit != null && limit < recommendations.size()) {
+                recommendations = recommendations.subList(0, limit);
+            }
+
+            log.info("Cheapest price plans recommended successfully for smart meter ID: {}", smartMeterId);
+            return ResponseEntity.ok(recommendations);
+        } catch (Exception e) {
+            log.error("An error occurred while processing the request", e);
+            return ResponseEntity.status(500).build(); // Internal Server Error
         }
-
-        List<Map.Entry<String, BigDecimal>> recommendations = new ArrayList<>(consumptionsForPricePlans.get().entrySet());
-        recommendations.sort(Comparator.comparing(Map.Entry::getValue));
-
-        if (limit != null && limit < recommendations.size()) {
-            recommendations = recommendations.subList(0, limit);
-        }
-
-        log.info("Cheapest price plans recommended successfully for smart meter ID: {}", smartMeterId);
-        return ResponseEntity.ok(recommendations);
     }
 }

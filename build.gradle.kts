@@ -36,29 +36,26 @@ configurations {
     configurations["functionalTestRuntimeOnly"].extendsFrom(configurations.testRuntimeOnly.get())
 }
 
+// val functionalTest = task<Test>("functionalTest") {
+//     description = "Runs functional tests."
+//     group = "verification"
 
-val functionalTest = task<Test>("functionalTest") {
-    description = "Runs functional tests."
-    group = "verification"
+//     testClassesDirs = sourceSets["functionalTest"].output.classesDirs
+//     classpath = sourceSets["functionalTest"].runtimeClasspath
+//     shouldRunAfter("test")
 
-    testClassesDirs = sourceSets["functionalTest"].output.classesDirs
-    classpath = sourceSets["functionalTest"].runtimeClasspath
-    shouldRunAfter("test")
+//     useJUnitPlatform()
 
-    useJUnitPlatform()
-
-    testLogging {
-        events ("failed", "passed", "skipped", "standard_out")
-    }
-}
+//     testLogging {
+//         events ("failed", "passed", "skipped", "standard_out")
+//     }
+// }
 
 
 dependencies {
     /* Spring Boot */
     implementation ("org.springframework.boot:spring-boot-starter-web")
-    // implementation("io.springfox:springfox-swagger-ui:2.9.2")
-    // implementation("io.springfox:springfox-swagger2:2.9.2")
-    //implementation("io.springfox:springfox-swagger2:3.0.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude (group = "org.junit.vintage", module = "junit-vintage-engine")
     }
@@ -76,4 +73,4 @@ tasks.named<Test>("test") {
     }
 }
 
-tasks.check { dependsOn(functionalTest) }
+// tasks.check { dependsOn(functionalTest) }

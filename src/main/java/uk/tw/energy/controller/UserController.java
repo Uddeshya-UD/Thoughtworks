@@ -13,7 +13,7 @@ import uk.tw.energy.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -30,11 +30,11 @@ public class UserController {
         logger.info("Received request to get smart meters for user with ID: {}", userId);
         List<String> smartMeters = userService.getSmartMetersForUser(userId);
 
-        if (smartMeters != null) {
-            logger.info("Smart meters found for user with ID {}: {}", userId, smartMeters);
+        if (!smartMeters.isEmpty()) {
+            logger.info("Smart meters found for user with userID {}", userId);
             return new ResponseEntity<>(smartMeters, HttpStatus.OK);
         } else {
-            logger.warn("No smart meters found for user with ID: {}", userId);
+            logger.warn("No smart meters found for user with userID: {}", userId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -49,6 +49,26 @@ public class UserController {
         } catch (Exception e) {
             logger.error("Failed to save user and meters. Error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save user and meters");
+        }
+    }
+
+    @GetMapping("/meter/{smartMeterId}")
+    public ResponseEntity<String> getUserDetailsBySmartMeterId(@PathVariable String smartMeterId) {
+        logger.info("Received request to get user details for smart meter ID: {}", smartMeterId);
+
+        try {
+            String user = userService.getUserDetailsBySmartMeterId(smartMeterId);
+
+            if (user != null) {
+                logger.info("User details found for smart meter ID: {}", smartMeterId);
+                return ResponseEntity.ok(user);
+            } else {
+                logger.warn("No user details found for smart meter ID: {}", smartMeterId);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("An error occurred while processing the request", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

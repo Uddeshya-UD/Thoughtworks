@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/readings")
+@RequestMapping("/v1/readings")
 public class MeterReadingController {
 
     private static final Logger log = LoggerFactory.getLogger(MeterReadingController.class);
@@ -31,18 +31,6 @@ public class MeterReadingController {
         this.meterReadingService = meterReadingService;
     }
 
-    // OPTIONAL - ISSUE 
-    
-    /*
-
-    Using the @Valid annotation on a method parameter in a Spring MVC controller indicates that the method expects the input to be validated according to the validation constraints defined on the method parameter class (in this case, MeterReadings). 
-    
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error: " + ex.getMessage());
-    }
-
-    */
     
     @PostMapping("/store")
     public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {

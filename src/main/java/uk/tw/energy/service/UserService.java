@@ -59,7 +59,22 @@ public class UserService {
             log.info("List of users: {}", userToSmartMeters);
         } catch (Exception e) {
             log.error("An error occurred while saving user and meters.", e);
-            // Handle the exception or rethrow if needed
         }
+    }
+
+    public String getUserDetailsBySmartMeterId(String smartMeterId) {
+        // Iterate through the userToSmartMeters map to find the user for the given smart meter ID
+        for (Map.Entry<String, List<String>> entry : userToSmartMeters.entrySet()) {
+            String user = entry.getKey();
+            List<String> smartMeters = entry.getValue();
+
+            if (smartMeters.contains(smartMeterId)) {
+                // Return the user if the smart meter ID is found in the user's list
+                return user;
+            }
+        }
+
+        // Return null or an appropriate value if no user is found for the given smart meter ID
+        return null;
     }
 }

@@ -1,8 +1,9 @@
 package uk.tw.energy.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
@@ -21,9 +22,9 @@ import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-// Instead of using assertThat from AssertJ, you can use the built-in assertions provided by JUnit 5.
-
 public class PricePlanComparatorControllerTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(PricePlanComparatorControllerTest.class);
 
     private static final String PRICE_PLAN_1_ID = "test-supplier";
     private static final String PRICE_PLAN_2_ID = "best-supplier";
@@ -35,6 +36,8 @@ public class PricePlanComparatorControllerTest {
 
     @BeforeEach
     public void setUp() {
+        logger.info("Setting up test environment...");
+
         meterReadingService = new MeterReadingService(new HashMap<>());
         PricePlan pricePlan1 = new PricePlan(PRICE_PLAN_1_ID, null, BigDecimal.TEN, null);
         PricePlan pricePlan2 = new PricePlan(PRICE_PLAN_2_ID, null, BigDecimal.ONE, null);
@@ -48,6 +51,9 @@ public class PricePlanComparatorControllerTest {
         accountService = new AccountService(meterToTariffs);
 
         controller = new PricePlanComparatorController(tariffService, accountService);
+
+        logger.info("Test environment set up successfully.");
+
     }
 
     @Test
@@ -115,7 +121,6 @@ public class PricePlanComparatorControllerTest {
 
     @Test
     public void givenNoMatchingMeterIdShouldReturnNotFound() {
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, controller.calculatedCostForEachPricePlan("not-found").getStatusCode());
-
+        assertThat(controller.calculatedCostForEachPricePlan("not-found").getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

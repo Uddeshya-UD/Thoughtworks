@@ -1,29 +1,28 @@
-// package uk.tw.energy;
+package uk.tw.energy;
 
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-// import springfox.documentation.builders.RequestHandlerSelectors;
-// import springfox.documentation.spi.DocumentationType;
-// import springfox.documentation.spring.web.plugins.Docket;
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 
+/**
+ * SwaggerConfig
+ */
+@Configuration
+public class SwaggerConfig {
 
-// @Configuration
-// // @EnableSwagger2
-// public class SwaggerConfig {
-
-//     @Bean
-//     public Docket productApi() {
-//         return new Docket(DocumentationType.SWAGGER_2)
-//                 .select()
-//                 .apis(RequestHandlerSelectors.basePackage("uk.tw.energy"))
-//                 .build();
-//     }
-
-//     public void addResourceHandler(ResourceHandlerRegistry registry) {
-//         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-//         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-
-//     }
-// }
+    @Bean
+    public OpenAPI springShopOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("JOI Energy API")
+                        .description("JOI Energy sample application")
+                        .version("1.0")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("JOI Energy Wiki Documentation")
+                        .url("https://github.com/techops-recsys-lateral-hiring/developer-joyofenergy-java"));
+    }
+}
